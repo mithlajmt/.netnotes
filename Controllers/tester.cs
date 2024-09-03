@@ -30,5 +30,23 @@ namespace WebApplication1.Controllers
             return Ok(test);
         }
 
+        [HttpPost]
+        [HttpPost]
+        public async Task<IActionResult> Post()
+        {
+            using (var reader = new StreamReader(Request.Body))
+            {
+                // Read the request body as a string
+                var body = await reader.ReadToEndAsync();
+
+                // Log the request body to the console
+                Console.WriteLine(body);
+
+                // Return the request body as the response (for testing purposes)
+                return Ok(body);
+            }
+        }
+
+
     }
 }
