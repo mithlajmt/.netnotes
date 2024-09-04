@@ -47,7 +47,7 @@ namespace WebApplication1.Controllers
             {
                 Name = employeeDto.Name,
                 Email = employeeDto.Email,
-                Phone = employeeDto.PhoneNumber, 
+                Phone = employeeDto.PhoneNumber,
             };
 
             // Asynchronously add the new employee to the database context
@@ -59,5 +59,44 @@ namespace WebApplication1.Controllers
             // Return the created employee with a 201 Created status
             return CreatedAtAction(nameof(GetAllEmployees), new { id = employeeEntity.Id }, employeeEntity);
         }
+
+
+
+        [HttpGet]
+        [Route("{Id:guid}")]
+        public async Task<IActionResult> GetEmployeeById(Guid Id)
+        {
+            // Use FindAsync to perform an asynchronous lookup
+            var employee = await empContext.Employees.FindAsync(Id);
+
+            // Check if the employee exists
+            if (employee == null)
+            {
+                // Return a 404 Not Found response if the employee is not found
+                return NotFound();
+            }
+
+            // Return the employee details with a 200 OK response
+            return Ok(employee);
+        }
+
+        [HttpDelete]
+        [Route("{Id:Guid}")]
+        public async Task<IActionResult> DeleteEmployee(Guid Id)
+        {
+            var employee = await empContext.Employees.FindAsync(Id); // Corrected here
+
+            if (employee == null)
+            {
+                return NotFound("Employee not found.");
+            }
+
+            empContext.Employees.Remove(employee);
+            await empContext.SaveChangesAsync();
+
+            return Ok("Employee deleted successfully.");
+        }
+
+
     }
 }
